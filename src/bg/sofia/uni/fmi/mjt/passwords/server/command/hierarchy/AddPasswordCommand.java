@@ -53,7 +53,7 @@ public class AddPasswordCommand implements Command {
           WebsiteRegistration.of(args[WEBSITE_INDEX], args[USER_INDEX], args[PASSWORD_INDEX]));
       return ServerMessage.PASSWORD_ADDED.text();
     } catch (Exception e) {
-      return ServerMessage.formatMessage(ServerMessage.UNEXPECTED_SERVER_ERROR, e.getMessage());
+      return ServerMessage.formatUnexpectedServerErrorMessage(e);
     }
   }
 }

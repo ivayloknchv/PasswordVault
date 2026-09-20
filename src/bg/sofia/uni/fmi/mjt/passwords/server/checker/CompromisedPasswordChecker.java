@@ -40,18 +40,18 @@ public class CompromisedPasswordChecker implements PasswordChecker {
       Thread.currentThread().interrupt();
       logger.log(e);
       throw new CompromisedPasswordCheckException("Password check failed", e);
-    } catch (IOException | CompromisedPasswordCheckException e) {
+    } catch (IOException e) {
       logger.log(e);
       throw new CompromisedPasswordCheckException("Password check failed", e);
     }
   }
 
-  private boolean checkPassword(HttpResponse<String> response, String plainPassword) throws CompromisedPasswordCheckException {
+  private boolean checkPassword(HttpResponse<String> response, String plainPassword) throws IOException {
     if (response.statusCode() == NOT_FOUND_CODE) {
       return true;
     } else if (response.statusCode() != SUCCESS_CODE) {
       logger.log("API request failed with code " + response.statusCode());
-      throw new CompromisedPasswordCheckException("API request failed with code " + response.statusCode());
+      throw new IOException("API request failed with code " + response.statusCode());
     }
 
     String passwordHash = DigestUtils.sha256Hex(plainPassword);

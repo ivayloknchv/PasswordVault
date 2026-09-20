@@ -1,5 +1,8 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public enum ServerMessage {
   BLANK_COMMAND("Command line is blank"),
   INVALID_COMMAND("%s is not a valid command"),
@@ -35,6 +38,22 @@ public enum ServerMessage {
 
   public static String formatMessage(ServerMessage serverMessage, Object... fields) {
     return String.format(serverMessage.text(), fields);
+  }
+
+  public static String formatUnexpectedServerErrorMessage(Exception exception) {
+    return ServerMessage.formatMessage(
+        ServerMessage.UNEXPECTED_SERVER_ERROR, getStackTrace(exception));
+  }
+
+  private static String getStackTrace(Exception exception) {
+    List<String> result = new ArrayList<>();
+    Throwable throwable = exception;
+    while (throwable != null) {
+      result.add(throwable.getMessage());
+      throwable = throwable.getCause();
+    }
+
+    return String.join("; ", result);
   }
 
   public static String formatWrongArgumentsCountMessage(CommandType command, int passedArgCount) {

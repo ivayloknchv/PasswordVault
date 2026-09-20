@@ -61,7 +61,7 @@ public class RegisterCommand implements Command {
         return ServerMessage.NOT_SECURE_PASSWORD.text();
       }
     } catch (Exception e) {
-      return ServerMessage.formatMessage(ServerMessage.UNEXPECTED_SERVER_ERROR, e.getMessage());
+      return ServerMessage.formatUnexpectedServerErrorMessage(e);
     }
 
     User newUser = new User(args[USER_INDEX], args[PASSWORD_INDEX]);

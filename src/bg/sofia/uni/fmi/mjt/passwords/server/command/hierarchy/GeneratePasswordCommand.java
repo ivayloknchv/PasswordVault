@@ -51,7 +51,7 @@ public class GeneratePasswordCommand implements Command {
       loggedUser.addWebsiteRegistration(WebsiteRegistration.of(args[WEBSITE], args[USER], password));
       return password;
     } catch (PasswordGenerateException e) {
-      return ServerMessage.formatMessage(ServerMessage.UNEXPECTED_SERVER_ERROR, e.getMessage());
+      return ServerMessage.formatUnexpectedServerErrorMessage(e);
     }
   }
 }
