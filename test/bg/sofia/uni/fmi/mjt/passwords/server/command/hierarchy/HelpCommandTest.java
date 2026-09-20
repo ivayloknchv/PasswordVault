@@ -16,7 +16,7 @@ class HelpCommandTest {
       register <user> <password> <password-repeat>
       login <user> <password>
       logout
-      retrieve-credentials <website> <user>
+      retrieve-password <website> <user>
       generate-password <website> <user>
       add-password <website> <user> <password>
       remove-password <website> <user>

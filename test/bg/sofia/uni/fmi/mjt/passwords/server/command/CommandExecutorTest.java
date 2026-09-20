@@ -72,7 +72,7 @@ class CommandExecutorTest {
 
     assertEquals(
         "123456",
-        executor.execute("retrieve-credentials                    website     username", selectionKeyMock),
+        executor.execute("retrieve-password                    website     username", selectionKeyMock),
         "Should return the password in plain text format");
   }
 }

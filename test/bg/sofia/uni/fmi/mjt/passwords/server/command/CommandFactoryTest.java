@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
-import java.util.Collections;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.LoginCommand;
 import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.LogoutCommand;
 import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.RegisterCommand;
 import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.RemovePasswordCommand;
-import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.RetrieveCredentialsCommand;
+import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.RetrievePasswordCommand;
 import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
 import bg.sofia.uni.fmi.mjt.passwords.server.user.repository.UserRepository;
 
@@ -71,9 +70,9 @@ class CommandFactoryTest {
   }
 
   @Test
-  void testOfMethodRetrieveCredentialsCommand() {
+  void testOfMethodRetrievePasswordCommand() {
     assertInstanceOf(
-        RetrieveCredentialsCommand.class, commandFactory.of("retrieve-credentials"));
+        RetrievePasswordCommand.class, commandFactory.of("retrieve-password"));
   }
 
   @Test

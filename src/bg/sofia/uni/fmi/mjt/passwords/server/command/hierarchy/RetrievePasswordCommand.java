@@ -7,7 +7,7 @@ import bg.sofia.uni.fmi.mjt.passwords.server.command.CommandType;
 import bg.sofia.uni.fmi.mjt.passwords.server.command.ServerMessage;
 import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
 
-public class RetrieveCredentialsCommand implements Command {
+public class RetrievePasswordCommand implements Command {
   private static final int WEBSITE_INDEX = 0;
   private static final int USER_INDEX = 1;
 
@@ -15,8 +15,8 @@ public class RetrieveCredentialsCommand implements Command {
   public String execute(String[] args, SelectionKey selectionKey) {
     if (args == null) {
       return ServerMessage.INVALID_ARGUMENTS.text();
-    } else if (args.length != CommandType.RETRIEVE_CREDENTIALS.argsCount()) {
-      return ServerMessage.formatWrongArgumentsCountMessage(CommandType.RETRIEVE_CREDENTIALS, args.length);
+    } else if (args.length != CommandType.RETRIEVE_PASSWORD.argsCount()) {
+      return ServerMessage.formatWrongArgumentsCountMessage(CommandType.RETRIEVE_PASSWORD, args.length);
     }
 
     ClientSession clientSession = (ClientSession) selectionKey.attachment();

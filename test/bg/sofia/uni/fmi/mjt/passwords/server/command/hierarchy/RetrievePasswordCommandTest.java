@@ -15,7 +15,7 @@ import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
 import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
 
 @ExtendWith(MockitoExtension.class)
-class RetrieveCredentialsCommandTest {
+class RetrievePasswordCommandTest {
 
   private static final String[] ARGUMENTS = new String[] { "facebook", "Jane Doe" };
 
@@ -28,7 +28,7 @@ class RetrieveCredentialsCommandTest {
   @Mock
   private User userMock;
 
-  private final Command command = new RetrieveCredentialsCommand();
+  private final Command command = new RetrievePasswordCommand();
 
   @Test
   void testExecuteNullArgs() {
@@ -40,7 +40,7 @@ class RetrieveCredentialsCommandTest {
   @Test
   void testExecuteInvalidArgsCount() {
     assertEquals(
-        "retrieve-credentials expected 2 arguments but found 4",
+        "retrieve-password expected 2 arguments but found 4",
         command.execute(new String[4], selectionKeyMock),
         "Command expects different arguments count");
   }

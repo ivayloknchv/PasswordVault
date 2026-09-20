@@ -13,7 +13,7 @@ their accounts, as well as create, generate and remove passwords for different w
 
 ``logout`` - logs out of the current user account
 
-``retrieve-credentials <website> <user>`` - returns the stored password for the given website credentials
+``retrieve-password <website> <user>`` - returns the stored password for the given website credentials
 
 ``generate-password <website> <user>`` - generates and saves a password for the given website credentials
 
@@ -42,7 +42,8 @@ The project has the following structure:
 The current implementation uses
 this [Enzoic API endpoint](https://docs.enzoic.com/enzoic-api-developer-documentation/api-reference/passwords-api) to
 check for compromised passwords. The API endpoint requires an authentication with an API key and a Secret key. These
-keys can be acquired after registration [here](https://www.enzoic.com/try-now/). The authentication keys must be placed in``credentials.json`` before starting the server.
+keys can be acquired after registration [here](https://www.enzoic.com/try-now/). The authentication keys must be placed in``credentials.json`` before
+starting the server.
 
 ## Further content
 

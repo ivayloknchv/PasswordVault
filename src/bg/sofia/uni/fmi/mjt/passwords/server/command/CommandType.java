@@ -6,7 +6,7 @@ public enum CommandType {
   REGISTER("register", 3, "register <user> <password> <password-repeat>"),
   LOGIN("login", 2, "login <user> <password>"),
   LOGOUT("logout", 0, "logout"),
-  RETRIEVE_CREDENTIALS("retrieve-credentials", 2, "retrieve-credentials <website> <user>"),
+  RETRIEVE_PASSWORD("retrieve-password", 2, "retrieve-password <website> <user>"),
   GENERATE_PASSWORD("generate-password", 2, "generate-password <website> <user>"),
   ADD_PASSWORD("add-password", 3, "add-password <website> <user> <password>"),
   REMOVE_PASSWORD("remove-password", 2, "remove-password <website> <user>"),
