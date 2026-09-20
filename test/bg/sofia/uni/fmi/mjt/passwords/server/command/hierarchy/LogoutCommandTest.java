@@ -1,55 +1,71 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy;
 
-import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
 import java.nio.channels.SelectionKey;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
+import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
+
+@ExtendWith(MockitoExtension.class)
 class LogoutCommandTest {
-    private static SelectionKey selectionKeyMock;
-    private static ClientSession clientSessionMock;
-    private static User userMock;
 
-    private static Command command;
+  @Mock
+  private SelectionKey selectionKeyMock;
 
-    @BeforeAll
-    static void setUp() {
-        selectionKeyMock = mock(SelectionKey.class);
-        clientSessionMock = mock(ClientSession.class);
-        userMock = mock(User.class);
+  @Mock
+  private ClientSession clientSessionMock;
 
-        command = new LogoutCommand(mock(Map.class));
-    }
+  @Mock
+  private User userMock;
 
-    @Test
-    void testExecuteInvalidArgsCount() {
-        assertEquals("logout expected 0 arguments but found 4", command.execute(new String[4], selectionKeyMock),
-            "Command expects different arguments count");
-    }
+  @Mock
+  private Map<String, User> activeUsersMock;
 
-    @Test
-    void testExecuteNotLoggedIn() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(null);
+  @InjectMocks
+  private LogoutCommand command;
 
-        assertEquals("User isn't logged in", command.execute(new String[0], selectionKeyMock),
-            "Should return a message for not logged in user");
-    }
+  @Test
+  void testCreateCommandNullActiveUsers() {
+    assertThrows(
+        IllegalArgumentException.class, () -> new LogoutCommand(null),
+        "Should thrown an exception when active users map is null");
+  }
 
-    @Test
-    void testExecuteSuccess() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(userMock);
+  @Test
+  void testExecuteInvalidArgsCount() {
+    assertEquals(
+        "logout expected 0 arguments but found 4", command.execute(new String[4], selectionKeyMock),
+        "Command expects different arguments count");
+  }
 
-        assertEquals("Logout successful", command.execute(new String[0], selectionKeyMock),
-            "Should return a message for a successful logout");
-    }
+  @Test
+  void testExecuteNotLoggedIn() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+
+    assertEquals(
+        "User isn't logged in", command.execute(new String[0], selectionKeyMock),
+        "Should return a message for not logged in user");
+  }
+
+  @Test
+  void testExecuteSuccess() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(userMock);
+
+    assertEquals(
+        "Logout successful", command.execute(new String[0], selectionKeyMock),
+        "Should return a message for a successful logout");
+  }
 
 }

@@ -1,43 +1,57 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy;
 
-import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
-import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.Command;
-import bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy.DisconnectCommand;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.nio.channels.SelectionKey;
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.nio.channels.SelectionKey;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
+import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
+
+@ExtendWith(MockitoExtension.class)
 class DisconnectCommandTest {
-    private static SelectionKey selectionKeyMock;
-    private static ClientSession clientSessionMock;
-    private static Command command;
 
-    @BeforeAll
-    static void setUp() {
-        selectionKeyMock = mock(SelectionKey.class);
-        clientSessionMock = mock(ClientSession.class);
-        command = new DisconnectCommand(new HashMap<>());
-    }
+  @Mock
+  private SelectionKey selectionKeyMock;
 
-    @Test
-    void testExecuteInvalidArgsCount() {
-        assertEquals("disconnect expected 0 arguments but found 4", command.execute(new String[4], selectionKeyMock),
-            "Command expects different arguments count");
-    }
+  @Mock
+  private ClientSession clientSessionMock;
 
-    @Test
-    void testExecuteSuccess() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(null);
+  @Mock
+  private Map<String, User> activeUsersMock;
 
-        assertEquals("Disconnected", command.execute(new String[0], selectionKeyMock),
-            "User is disconnected from the server");
-    }
+  @InjectMocks
+  private DisconnectCommand command;
 
+  @Test
+  void testCreateCommandNullActiveUsers() {
+    assertThrows(
+        IllegalArgumentException.class, () -> new DisconnectCommand(null),
+        "Should thrown an exception when active users map is null");
+  }
+
+  @Test
+  void testExecuteInvalidArgsCount() {
+    assertEquals(
+        "disconnect expected 0 arguments but found 4", command.execute(new String[4], selectionKeyMock),
+        "Command expects different arguments count");
+  }
+
+  @Test
+  void testExecuteSuccess() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+
+    assertEquals(
+        "Disconnected", command.execute(new String[0], selectionKeyMock),
+        "User is disconnected from the server");
+  }
 }

@@ -1,87 +1,133 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.command.hierarchy;
 
-import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
-import bg.sofia.uni.fmi.mjt.passwords.server.user.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.nio.channels.SelectionKey;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import bg.sofia.uni.fmi.mjt.passwords.server.ClientSession;
+import bg.sofia.uni.fmi.mjt.passwords.server.checker.CompromisedPasswordChecker;
+import bg.sofia.uni.fmi.mjt.passwords.server.exception.CompromisedPasswordCheckException;
+import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
+import bg.sofia.uni.fmi.mjt.passwords.server.user.repository.UserRepository;
+
+@ExtendWith(MockitoExtension.class)
 class RegisterCommandTest {
-    private static SelectionKey selectionKeyMock;
-    private static UserRepository userRepositoryMock;
-    private static ClientSession clientSessionMock;
-    private static User userMock;
 
-    private static Command command;
-    private static String[] arguments1;
-    private static String[] arguments2;
+  private static final String[] ARGUMENTS_1 = new String[] { "user", "pass", "pass" };
 
-    @BeforeAll
-    static void setUp() {
-        selectionKeyMock = mock(SelectionKey.class);
-        userRepositoryMock = mock(UserRepository.class);
-        clientSessionMock = mock(ClientSession.class);
-        userMock = mock(User.class);
+  private static final String[] arguments2 = new String[] { "user", "pass", "Pass" };
 
-        command = new RegisterCommand(userRepositoryMock);
-        arguments1 = new String[] {"user", "pass", "pass"};
-        arguments2 = new String[] {"user", "pass", "Pass"};
-    }
+  @Mock
+  private SelectionKey selectionKeyMock;
 
-    @Test
-    void testExecuteNullArgs() {
-        assertEquals("Invalid arguments", command.execute(null, selectionKeyMock),
-            "Command cannot accept null args");
-    }
+  @Mock
+  private UserRepository userRepositoryMock;
 
-    @Test
-    void testExecuteInvalidArgsCount() {
-        assertEquals("register expected 3 arguments but found 4", command.execute(new String[4], selectionKeyMock),
-            "Command expects different arguments count");
-    }
+  @Mock
+  private CompromisedPasswordChecker passwordCheckerMock;
 
-    @Test
-    void testExecuteAlreadyLoggedIn() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(userMock);
+  @Mock
+  private ClientSession clientSessionMock;
 
-        assertEquals("User is logged in", command.execute(arguments1, selectionKeyMock), "User is logged in");
-    }
+  @Mock
+  private User userMock;
 
-    @Test
-    void testExecuteUserExists() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(null);
-        when(userRepositoryMock.getUser(any())).thenReturn(userMock);
+  @InjectMocks
+  private RegisterCommand command;
 
-        assertEquals("User user already exists", command.execute(arguments1, selectionKeyMock),
-            "Should return a message for existing user");
-    }
+  @Test
+  void testCreateCommandNullUsersRepo() {
+    assertThrows(
+        IllegalArgumentException.class, () -> new RegisterCommand(null),
+        "Should thrown an exception when users repo is null");
+  }
 
-    @Test
-    void testExecuteNonMatchingPassword() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(null);
-        when(userRepositoryMock.getUser(any())).thenReturn(null);
+  @Test
+  void testExecuteNullArgs() {
+    assertEquals(
+        "Invalid arguments", command.execute(null, selectionKeyMock),
+        "Command cannot accept null args");
+  }
 
-        assertEquals("Passwords don't match", command.execute(arguments2, selectionKeyMock),
-            "Should return a message for non-matching passwords");
-    }
+  @Test
+  void testExecuteInvalidArgsCount() {
+    assertEquals(
+        "register expected 3 arguments but found 4", command.execute(new String[4], selectionKeyMock),
+        "Command expects different arguments count");
+  }
 
-    @Test
-    void testExecuteSuccess() {
-        when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
-        when(clientSessionMock.getLoggedUser()).thenReturn(null);
-        when(userRepositoryMock.getUser(any())).thenReturn(null);
+  @Test
+  void testExecuteAlreadyLoggedIn() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(userMock);
 
-        assertEquals("User user has been registered", command.execute(arguments1, selectionKeyMock),
-            "Should return a message registered user");
-    }
+    assertEquals("User is logged in", command.execute(ARGUMENTS_1, selectionKeyMock), "User is logged in");
+  }
+
+  @Test
+  void testExecuteUserExists() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+    when(userRepositoryMock.getUser(any())).thenReturn(userMock);
+
+    assertEquals(
+        "User user already exists", command.execute(ARGUMENTS_1, selectionKeyMock),
+        "Should return a message for existing user");
+  }
+
+  @Test
+  void testExecuteNonMatchingPassword() {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+    when(userRepositoryMock.getUser(any())).thenReturn(null);
+
+    assertEquals(
+        "Passwords don't match", command.execute(arguments2, selectionKeyMock),
+        "Should return a message for non-matching passwords");
+  }
+
+  @Test
+  void testExecuteWeakPassword() throws CompromisedPasswordCheckException {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+    when(userRepositoryMock.getUser(any())).thenReturn(null);
+    when(passwordCheckerMock.isValid(any())).thenReturn(false);
+
+    assertEquals(
+        "Password is not secure enough", command.execute(ARGUMENTS_1, selectionKeyMock),
+        "Should return a message for weak password");
+  }
+
+  @Test
+  void testExecuteWeakPasswordCheckFails() throws CompromisedPasswordCheckException {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+    when(userRepositoryMock.getUser(any())).thenReturn(null);
+    when(passwordCheckerMock.isValid(any())).thenThrow(new CompromisedPasswordCheckException("Error"));
+
+    assertEquals(
+        "Unexpected server error: Error", command.execute(ARGUMENTS_1, selectionKeyMock),
+        "Should return a message for internal server error");
+  }
+
+  @Test
+  void testExecuteSuccess() throws CompromisedPasswordCheckException {
+    when(selectionKeyMock.attachment()).thenReturn(clientSessionMock);
+    when(clientSessionMock.getLoggedUser()).thenReturn(null);
+    when(userRepositoryMock.getUser(any())).thenReturn(null);
+    when(passwordCheckerMock.isValid(any())).thenReturn(true);
+
+    assertEquals(
+        "User user has been registered", command.execute(ARGUMENTS_1, selectionKeyMock),
+        "Should return a message registered user");
+  }
 }

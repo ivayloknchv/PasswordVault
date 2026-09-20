@@ -42,12 +42,10 @@ The project has the following structure:
 The current implementation uses
 this [Enzoic API endpoint](https://docs.enzoic.com/enzoic-api-developer-documentation/api-reference/passwords-api) to
 check for compromised passwords. The API endpoint requires an authentication with an API key and a Secret key. These
-keys
-can be acquired after registration [here](https://www.enzoic.com/try-now/). The authentication keys must be placed in
-``authentication.json`` before starting the server.
+keys can be acquired after registration [here](https://www.enzoic.com/try-now/). The authentication keys must be placed in``credentials.json`` before starting the server.
 
 ## Further content
 
 * **data** - directory with a binary file with all users data
 * **log** - directory with a log file in human-readable text format
-* **authentication.json** - file where Enzoic API authentication credentials are placed
+* **credentials.json** - file where Enzoic API authentication credentials are placed

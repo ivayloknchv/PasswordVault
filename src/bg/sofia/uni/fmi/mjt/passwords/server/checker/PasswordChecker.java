@@ -4,5 +4,5 @@ import bg.sofia.uni.fmi.mjt.passwords.server.exception.CompromisedPasswordCheckE
 
 public interface PasswordChecker {
 
-    boolean isValid(String plainPassword) throws CompromisedPasswordCheckException;
+  boolean isValid(String plainPassword) throws CompromisedPasswordCheckException;
 }

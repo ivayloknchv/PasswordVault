@@ -1,23 +1,13 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.user.repository;
 
-import bg.sofia.uni.fmi.mjt.passwords.server.exception.UserDeserializationException;
-import bg.sofia.uni.fmi.mjt.passwords.server.exception.UserSerializationException;
-import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
-import bg.sofia.uni.fmi.mjt.passwords.server.util.Field;
-import bg.sofia.uni.fmi.mjt.passwords.server.util.Validator;
-
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
+import bg.sofia.uni.fmi.mjt.passwords.server.util.Field;
+import bg.sofia.uni.fmi.mjt.passwords.server.util.Validator;
 
 public class InMemoryUserRepository implements UserRepository {
     private Map<String, User> users = new ConcurrentHashMap<>();

@@ -1,16 +1,16 @@
 package bg.sofia.uni.fmi.mjt.passwords.server.user.repository;
 
-import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
-
 import java.util.Collection;
+
+import bg.sofia.uni.fmi.mjt.passwords.server.user.model.User;
 
 public interface UserRepository {
 
-    void addUser(User user);
+  void addUser(User user);
 
-    User getUser(String username);
+  User getUser(String username);
 
-    Collection<User> getAllUsers();
+  Collection<User> getAllUsers();
 
-    boolean userExists(String username);
+  boolean userExists(String username);
 }

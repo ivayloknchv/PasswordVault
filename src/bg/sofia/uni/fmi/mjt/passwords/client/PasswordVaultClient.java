@@ -14,7 +14,7 @@ public class PasswordVaultClient {
     private static final String SERVER_HOST = "localhost";
     private static final String DISCONNECT_COMMAND = "disconnect";
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
         try (SocketChannel socketChannel = SocketChannel.open();
              BufferedReader reader = new BufferedReader(Channels.newReader(socketChannel, StandardCharsets.UTF_8));
              PrintWriter writer = new PrintWriter(Channels.newWriter(socketChannel, StandardCharsets.UTF_8), true);
